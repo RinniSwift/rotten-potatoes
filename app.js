@@ -76,11 +76,20 @@ app.use(methodOverride('_method'))
 app.put('/reviews/:id', (req, res) => {
 	Review.findByIdAndUpdate(req.params.id, req.body)
 		.then(review => {
-			res.redirect('/reviews/${review._id}')
+			res.redirect('/')
 		})
 		.catch(err => {
 			console.log(err.message)
 		})
+})
+
+app.delete('/reviews/:id', function (req, res) {
+	console.log("Delete review")
+	Review.findByIdAndRemove(req.params.id).then((review) => {
+		res.redirect('/');
+	}).catch((err) => {
+		console.log(err.message);
+	})
 })
 
 Review.find()
