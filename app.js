@@ -1,4 +1,5 @@
 const express = require('express')
+const methodOverride = require('method-override')
 const app = express()
 const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/rotten-potatoes');
@@ -52,15 +53,34 @@ app.get('/reviews/:id', (req, res) => {
 	})
 });
 
+// edit
+app.get('/reviews/:id/edit', (req, res) => {
+	Review.findById(req.params.id, function(err, review) {
+		res.render('reviews-edit', { review: review });
+	})
+})
+
 
 // create
 app.post('/reviews', (req, res) => {
 	Review.create(req.body).then((review) => {
 		console.log(review);
-		res.redirect('/review/${review._id}')
+		res.redirect('/reviews/${review._id}')
 	}).catch((err) => {
 		console.log(err.message)
 	})
+})
+
+app.use(methodOverride('_method'))
+
+app.put('/reviews/:id', (req, res) => {
+	Review.findByIdAndUpdate(req.params.id, req.body)
+		.then(review => {
+			res.redirect('/reviews/${review._id}')
+		})
+		.catch(err => {
+			console.log(err.message)
+		})
 })
 
 Review.find()
