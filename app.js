@@ -11,6 +11,8 @@ const bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(methodOverride('_method'))
+
 
 // mock arrays of projects
 // let reviews = [
@@ -43,31 +45,33 @@ app.get('/reviews/new', (req, res) => {
 // show page for the individual movies from their unique id's
 app.get('/reviews/:id', (req, res) => {
 	Review.findById(req.params.id).then((review) => {
-		res.render('reviews-show', { review: review })
-	}).catch((err) => {
-		console.log(err.message);
-	})
+        res.render('reviews-show', { review: review })
+    }).catch((err) => {
+        console.log(err.message);
+    })
 });
 
 // edit
 app.get('/reviews/:id/edit', (req, res) => {
 	Review.findById(req.params.id, function(err, review) {
-		res.render('reviews-edit', { review: review });
-	})
+        res.render('reviews-edit', {review: review});
+    })
 })
 
 
 // create
 app.post('/reviews', (req, res) => {
-	Review.create(req.body).then((review) => {
-		console.log(review);
-		res.redirect('/reviews/${review._id}')
-	}).catch((err) => {
-		console.log(err.message)
-	})
+    // we use the method create() to create the review
+    Review.create(req.body).then((review) => {
+        console.log(review);
+        // then we redirect to reviews/:id
+        res.redirect(`/reviews/${review._id}`);
+    }).catch((err) => {
+        console.log(err.message);
+    })
 })
 
-app.use(methodOverride('_method'))
+
 
 app.put('/reviews/:id', (req, res) => {
 	Review.findByIdAndUpdate(req.params.id, req.body)
@@ -99,3 +103,5 @@ Review.find()
 app.listen(3000, () => {
 	console.log('App listening on port 3000!')
 })
+
+module.exports = app;
