@@ -1,21 +1,26 @@
-<form method="POST" action="/reviews">
-	{{> reviews-form}}
 
-	<!-- Ratings -->
-	<p>
-		<label for="ratings">Ratings</label><br>
-		<select>
-				<option value="zero">0</option>
-				<option value="one" selected>1</option>
-				<option value="two">2</option>
-				<option value="three">3</option>
-				<option value="four">4</option>
-				<option value="five">5</option>
-		</select>
-	</p>
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3">
+		<form method="POST" action="/reviews">
+			{{> reviews-form}}
 
-	<!-- Button -->
-	<p>
-		<button type="submit">Save Review</button>
-	</p>
-</form>
+			<!-- Ratings -->
+			<p>
+				<label for="ratings">Ratings</label><br>
+				<select>
+						<option value="zero">0</option>
+						<option value="one" selected>1</option>
+						<option value="two">2</option>
+						<option value="three">3</option>
+						<option value="four">4</option>
+						<option value="five">5</option>
+				</select>
+			</p>
+
+			<!-- Button -->
+			<div class="form-group">
+				<button ="btn btn-primary" type="submit">Save Review</button>
+			</div>
+		</form>
+	</div>
+</div>
