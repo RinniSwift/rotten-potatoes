@@ -1,14 +1,10 @@
 const express = require('express')
 const methodOverride = require('method-override')
 const app = express()
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/rotten-potatoes');
 
-const Review = mongoose.model('Review', {
-  title: String,
-  description: String,
-  movieTitle: String
-});
+const Review = require('./models/review');
+
+const reviews = require('./controllers/reviews')(app, Review);
 
 // initialize body-parser and add it to app
 const bodyParser = require('body-parser');
