@@ -2,6 +2,9 @@ const express = require('express')
 const methodOverride = require('method-override')
 const app = express()
 
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes');
+
 const Review = require('./models/review');
 
 const reviews = require('./controllers/reviews')(app, Review);
@@ -100,7 +103,7 @@ Review.find()
 
   });
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
 	console.log('App listening on port 3000!')
 })
 
