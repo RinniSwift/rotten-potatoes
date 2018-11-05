@@ -1,3 +1,5 @@
+
+
 const express = require('express')
 const methodOverride = require('method-override')
 const app = express()
@@ -6,8 +8,10 @@ const mongoose = require('mongoose');
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/rotten-potatoes');
 
 const Review = require('./models/review');
+const Comment = require('./models/comment')
 
-const reviews = require('./controllers/reviews')(app, Review);
+// const reviews = require('./controllers/reviews')(app, Review);
+// const comments = require('./controllers/comments')(app);
 
 // initialize body-parser and add it to app
 const bodyParser = require('body-parser');
@@ -48,10 +52,12 @@ app.get('/reviews/new', (req, res) => {
 // show page for the individual movies from their unique id's
 app.get('/reviews/:id', (req, res) => {
 	Review.findById(req.params.id).then((review) => {
-        res.render('reviews-show', { review: review })
-    }).catch((err) => {
-        console.log(err.message);
+    Comment.find({ reviewId: req.params.id }).then(comments => {
+      res.render('reviews-show', { review: review, comments: comments })
     })
+  }).catch((err) => {
+        console.log(err.message);
+  });
 });
 
 // edit
@@ -74,6 +80,13 @@ app.post('/reviews', (req, res) => {
     })
 })
 
+// app.post('/reviews/comments', (req, res) => {
+//   Comment.create(req.body).then(comment => {
+//     res.redirect(`/reviews/${comment.reviewId}`);
+//   }).catch((err) => {
+//     console.log(err.message);
+//   });
+// });
 
 
 app.put('/reviews/:id', (req, res) => {
@@ -87,13 +100,16 @@ app.put('/reviews/:id', (req, res) => {
 })
 
 app.delete('/reviews/:id', function (req, res) {
-	console.log("Delete review")
-	Review.findByIdAndRemove(req.params.id).then((review) => {
-		res.redirect('/');
-	}).catch((err) => {
-		console.log(err.message);
-	})
+    console.log("DELETE review")
+    Review.findByIdAndRemove(req.params.id).then((review) => {
+        // remove then redirect to the homepage
+        res.redirect('/');
+    }).catch((err) => {
+        console.log(err.message);
+    })
 })
+
+
 
 Review.find()
   .then(review => {
@@ -102,6 +118,7 @@ Review.find()
   .catch(err => {
 
   });
+
 
 app.listen(process.env.PORT || 3000, () => {
 	console.log('App listening on port 3000!')
